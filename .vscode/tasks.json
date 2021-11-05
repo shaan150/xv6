@@ -1,0 +1,35 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+   "version": "2.0.0",
+   "tasks": [
+    {
+        "label": "Build Xv6 operating system",
+        "type": "shell",
+        "command": "make",
+        "problemMatcher": [],
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        }
+    },
+    {
+        "label": "Run Xv6 under QEMU",
+        "type": "shell",
+        "command": "make qemu",
+        "problemMatcher": []
+    },
+    {
+        "label": "Run Xv6 under QEMU for debugging",
+        "type": "shell",
+        "command": "make qemu-gdb",
+        "problemMatcher": []
+    },
+    {
+        "label": "Clean non-source files",
+        "type": "shell",
+        "command": "make clean",
+        "problemMatcher": []
+    }
+]
+}
