@@ -36,7 +36,13 @@ my @syscalls = (
                 "mkdir",
 				"close",
                 "getch",
-				"setvideomode"
+				"setvideomode",
+				"setpixel",
+				"moveto",
+				"lineto",
+				"setpencolour",
+				"selectpen",
+				"fillrect"
 			   );
 
 my $i;			   

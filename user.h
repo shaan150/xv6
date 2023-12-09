@@ -1,5 +1,6 @@
 struct stat;
 struct rtcdate;
+struct rect;
 
 // system calls
 int fork(void);
@@ -25,6 +26,12 @@ int sleep(int);
 int uptime(void);
 int getch(void);
 int setvideomode(int);
+int setpixel(int hdc, int x, int y);
+int moveto(int hdc, int x, int y);
+int lineto(int hdc, int x, int y);
+int setpencolour(int index, int r, int g, int b);
+int selectpen(int hdc, int index);
+int fillrect(int hdc, struct rect *r);
 
 // ulib.c
 int stat(const char*, struct stat*);
