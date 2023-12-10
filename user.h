@@ -33,6 +33,7 @@ int setpencolour(int index, int r, int g, int b);
 int selectpen(int hdc, int index);
 int fillrect(int hdc, struct rect *r);
 
+
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);

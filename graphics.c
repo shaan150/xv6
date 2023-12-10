@@ -5,20 +5,28 @@
 #include "x86.h"
 
 
-
-
 // Current x and y coordinates to be used by lineto
 int current_x = 0;
 int current_y = 0;
 
 // Current color to be used by setpencolour
-char current_color = DEFAULT_COLOR;
+uint current_color = DEFAULT_COLOR;
 
 void clear320x200x256() {
     char* video_memory = (char*)VIDEO_MEMORY;
     for (int i = 0; i < 320 * 200; i++) {
         video_memory[i] = 0; // Black color
     }
+}
+
+int clip(int num, int max) {
+	if (num < 0) {
+		return 0;
+	} else if (num >= max) {
+		return max - 1;
+	} else {
+		return num;
+	}
 }
 
 void plotPixel(int x, int y, char color) {
@@ -38,25 +46,12 @@ int sys_setpixel(void) {
 		return -1;
 	}
 
-	if (x < 0 || x >= SCREEN_WIDTH || y < 0 || y >= SCREEN_HEIGHT) {
-        return -1;  // Coordinates are out of screen bounds
-    }
-
-	plotPixel(x, y, DEFAULT_COLOR);
+	plotPixel(x, y, current_color);
 	current_x = x;
 	current_y = y;
 	return 0;
 }
 
-int clip(int num, int max) {
-	if (num < 0) {
-		return 0;
-	} else if (num >= max) {
-		return max- 1;
-	} else {
-		return num;
-	}
-}
 
 int sys_moveto(void) {
 	int hdc, x, y;
@@ -71,7 +66,7 @@ int sys_moveto(void) {
 	}
 
 	x = clip(x, SCREEN_WIDTH);
-    y = clip(y, SCREEN_HEIGHT);
+	y = clip(y, SCREEN_HEIGHT);
 
 	current_x = x;
 	current_y = y;
@@ -99,7 +94,7 @@ void plotLineLow(int x0, int y0, int x1, int y1) {
 	int y = y0;
 
 	for (int x = x0; x <= x1; x++) {
-		plotPixel(x, y, DEFAULT_COLOR);
+		plotPixel(x, y, current_color);
 		if (D > 0) {
 			y = y + yi;
 			D += incrNE;
@@ -123,7 +118,7 @@ void plotLineHigh(int x0, int y0, int x1, int y1) {
 	int x = x0;
 
 	for (int y = y0; y <= y1; y++) {
-		plotPixel(x, y, DEFAULT_COLOR);
+		plotPixel(x, y, current_color);
 		if (D > 0) {
 			x = x + xi;
 			D += incrNE;
@@ -144,8 +139,11 @@ int sys_lineto(void) {
 		return -1;
 	}
 
-	int abs_x = clip(abs(x - current_x), SCREEN_WIDTH);
-	int abs_y = clip(abs(y - current_y), SCREEN_HEIGHT);
+	x = clip(x, SCREEN_WIDTH);
+	y = clip(y, SCREEN_HEIGHT);
+
+	int abs_x = abs(x - current_x);
+	int abs_y = abs(y - current_y);
 
 	if(abs_y < abs_x) {
 		if (current_x > x) {
@@ -190,21 +188,21 @@ int sys_setpencolour(void) {
 	b = clip(b, 64);
 
 	set_palette_color(index, r, g, b);
-	current_color = index;
+
 	return 0;
 }
 
 int sys_selectpen(void) {
     int index, hdc;
-    if (argint(0, &index) < 0 || index < 16 || index > 255) {
-        return -1;
-    }
-	if (argint(1, &hdc) < 0) {
+	if (argint(0, &hdc) < 0) {
 		return -1;
 	}
+    if (argint(1, &index) < 0 || index > 255) {
+        return -1;
+    }
+
 
 	int previous_color = current_color;
-	outb(PALETTE_INDEX, index);
 	current_color = index;
 
 	return previous_color;
@@ -225,10 +223,15 @@ int sys_fillrect(void) {
     r->bottom = clip(r->bottom, SCREEN_HEIGHT);
     r->right = clip(r->right, SCREEN_WIDTH);
 
-	for (int y = r->top; y < r->bottom; y++) {
-        for (int x = r->left; x < r->right; x++) {
-            plotPixel(x, y, current_color);
-        }
+    char* video_memory = (char*)VIDEO_MEMORY;
+    int width = r->right - r->left;
+
+    for (int y = r->top; y < r->bottom; y++) {
+        // Calculate the memory address of the start of the row
+        char* row = video_memory + y * SCREEN_WIDTH + r->left;
+
+        // Set the entire row to the current color
+        memset(row, current_color, width);
     }
 
 	return 0;

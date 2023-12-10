@@ -2,7 +2,7 @@
 #define VIDEO_MEMORY P2V(VIDEO_MEMORY_PHYS)
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
-#define DEFAULT_COLOR 0x0F  // White
+#define DEFAULT_COLOR 15  // White
 #define PALETTE_INDEX 0x3C8
 #define PALETTE_DATA  0x3C9
 
