@@ -8,21 +8,6 @@ int main(int argc, char* argv[])
 
     int hdc = beginpaint(0);
 
-    setpencolour(16, 0, 0, 63);
-    for (int i = 20; i < 160; i+=20)
-    {
-        selectpen(hdc, 16);
-        moveto(hdc, i, i + 20);
-        lineto(hdc, i, i + 40);
-        lineto(hdc, i + 20, i + 40);
-        lineto(hdc, i + 20, i + 20);
-        lineto(hdc, i, i + 20);
-    }
-
-    endpaint(hdc);
-
-    hdc = beginpaint(0);
-
     setpencolour(17, 0, 63, 0);
     for (int i = 20; i < 160; i+=20)
     {

@@ -32,6 +32,8 @@ int lineto(int hdc, int x, int y);
 int setpencolour(int index, int r, int g, int b);
 int selectpen(int hdc, int index);
 int fillrect(int hdc, struct rect *r);
+int beginpaint(int hwnd);
+int endpaint(int hdc);
 
 
 // ulib.c

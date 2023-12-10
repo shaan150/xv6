@@ -198,6 +198,7 @@ UPROGS=\
 	_wc\
 	_zombie\
 	_userlinetest\
+	_userlinetest2\
 	_userrecttest\
 
 fs.img: mkfs $(UPROGS)

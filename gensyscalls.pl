@@ -42,7 +42,9 @@ my @syscalls = (
 				"lineto",
 				"setpencolour",
 				"selectpen",
-				"fillrect"
+				"fillrect",
+				"beginpaint",
+				"endpaint"
 			   );
 
 my $i;			   

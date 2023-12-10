@@ -7,7 +7,7 @@ struct rect rectangle = { 0, 0, 0, 0 };
 int main(int argc, char* argv[])
 {
     setvideomode(0x13);
-    int hdc = 0;
+    int hdc = beginpaint(0);
 
     for (int i = 0; i < 50; i++)
     {
@@ -19,6 +19,8 @@ int main(int argc, char* argv[])
         rectangle.right = i + 40;
         fillrect(hdc, &rectangle);
     }
+
+    endpaint(hdc);
 
 
     getch();
