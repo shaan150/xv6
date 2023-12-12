@@ -8,15 +8,15 @@ int main(int argc, char* argv[])
 
     int hdc = beginpaint(0);
 
-    setpencolour(17, 0, 63, 0);
-    for (int i = 20; i < 160; i+=20)
+    for (int i = 0; i < 20; i++)
     {
-        selectpen(hdc, 17);
-        moveto(hdc, i, i);
-        lineto(hdc, i, i + 20);
-        lineto(hdc, i + 20, i + 20);
-        lineto(hdc, i + 20, i);
-        lineto(hdc, i, i);
+        moveto(hdc, i * 10, i * 5);
+        setpencolour(i + 20, i * 3, i * 2, i);
+        selectpen(hdc, i + 20);
+        lineto(hdc, i * 10 + 20, i * 5);
+        lineto(hdc, i * 10 + 20, i * 5 + 20);
+        lineto(hdc, i * 10, i * 5 + 20);
+        lineto(hdc, i * 10, i * 5);
     }
 
     endpaint(hdc);

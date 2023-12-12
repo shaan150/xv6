@@ -7,6 +7,7 @@
 #include "syscall.h"
 #include "traps.h"
 #include "memlayout.h"
+#include "graphics.h"
 
 char buf[8192];
 char name[3];
@@ -1716,6 +1717,259 @@ void argptest(){
     printf(1, "arg test passed\n");
 }
 
+void beginpainttest(int hdc) {
+    if(hdc == -1) {
+        printf(2, "beginpainttest failed \n");
+        exit();
+    } 
+    
+
+    int hdc2 = beginpaint(0);
+
+    int hdc3 = beginpaint(0);
+
+    if(hdc3 > -1) {
+        printf(2, "beginpainttestfailure failed \n");
+        exit();
+    } 
+
+    endpaint(hdc2);
+    endpaint(hdc3);
+
+    printf(1, "beginpainttestfailure passed \n");
+
+}
+
+void setpixeltest(int hdc) {
+    int pixel = setpixel(hdc, 0, 0);
+
+    if(pixel == -1) {
+        printf(2, "setpixeltest failed due to invalid HDC\n");
+        exit();
+    }
+
+    pixel = setpixel(hdc, -1, 0);
+
+    if(pixel == -1) {
+        printf(2, "setpixeltest failed due to x not being handled in clip \n");
+        exit();
+    }
+
+    pixel = setpixel(hdc, 0, -1);
+
+    if(pixel == -1) {
+        printf(2, "setpixeltest failed due to not being handled in clip \n");
+        exit();
+    }
+
+    pixel = setpixel(-1, 0, 0);
+
+    if(pixel > -1) {
+        printf(2, "setpixeltest failed due to HDC being valid when it should be invalid \n");
+        exit();
+    }
+
+    printf(1, "setpixeltest passed \n");
+}
+
+void movetotest(int hdc) {
+    int pixel = moveto(hdc, 0, 0);
+
+    if(pixel == -1) {
+        printf(2, "movetotest failed due to invalid HDC\n");
+        exit();
+    }
+
+    pixel = moveto(hdc, -1, 0);
+
+    if(pixel == -1) {
+        printf(2, "movetotest failed due to x not being handled in clip \n");
+        exit();
+    }
+
+    pixel = moveto(hdc, 0, -1);
+
+    if(pixel == -1) {
+        printf(2, "movetotest failed due to not being handled in clip \n");
+        exit();
+    }
+
+    pixel = moveto(-1, 0, 0);
+
+    if(pixel > -1) {
+        printf(2, "movetotest failed due to HDC being valid when it should be invalid \n");
+        exit();
+    }
+
+    printf(1, "movetotest passed \n");
+}
+
+void linetest(int hdc) {
+    int pixel = lineto(hdc, 0, 0);
+
+    if(pixel == -1) {
+        printf(2, "linetest failed due to invalid HDC\n");
+        exit();
+    }
+
+    pixel = lineto(hdc, -1, 0);
+
+    if(pixel == -1) {
+        printf(2, "linetest failed due to x not being handled in clip \n");
+        exit();
+    }
+
+    pixel = lineto(hdc, 0, -1);
+
+    if(pixel == -1) {
+        printf(2, "linetest failed due to y not being handled in clip \n");
+        exit();
+    }
+
+    pixel = lineto(-1, 0, 0);
+
+    if(pixel > -1) {
+        printf(2, "linetest failed due to HDC being valid when it should be invalid \n");
+        exit();
+    }
+
+    printf(1, "linetest passed \n");
+}
+
+void setpencolourtest() {
+    int pencolour = setpencolour(16, 0, 0, 0);
+
+    if(pencolour == -1) {
+        printf(2, "setpencolourtest failed due to invalid index\n");
+        exit();
+    }
+
+    pencolour = setpencolour(16, 64, 64, 64);
+
+    if(pencolour == -1) {
+        printf(2, "setpencolourtest failed due to clipping failure\n");
+        exit();
+    }
+
+    pencolour = setpencolour(16, -1, 0, 0);
+
+    if(pencolour == -1) {
+        printf(2, "setpencolourtest failed due to clipping failure\n");
+        exit();
+    }
+
+    pencolour = setpencolour(15, 0, 0, 0);
+
+    if(pencolour > -1) {
+        printf(2, "setpencolourtest failed due to index being valid when it should be invalid\n");
+        exit();
+    }
+
+    pencolour = setpencolour(256, 0, 0, 0);
+
+    if(pencolour > -1) {
+        printf(2, "setpencolourtest failed due to index being valid when it should be invalid\n");
+        exit();
+    }
+
+    printf(1, "setpencolourtest passed \n");
+}
+
+void selectpentest(int hdc) {
+    int pen = selectpen(hdc, 0);
+
+    if(pen == -1) {
+        printf(2, "selectpentest failed due to invalid HDC\n");
+        exit();
+    }
+
+    pen = selectpen(hdc, 15);
+
+    if(pen == -1) {
+        printf(2, "selectpentest failed due to invalid index\n");
+        exit();
+    }
+
+    pen = selectpen(-1, 16);
+
+    if(pen > -1) {
+        printf(2, "selectpentest failed due to HDC being valid when it should be invalid\n");
+        exit();
+    }
+
+    pen = selectpen(hdc, 256);
+
+    if(pen > -1) {
+        printf(2, "selectpentest failed due to index being valid when it should be invalid\n");
+        exit();
+    }
+
+    printf(1, "selectpentest passed \n");
+}
+
+void fillrecttest(int hdc) {
+    struct rect r;
+    r.top = 0;
+    r.left = 0;
+    r.bottom = 0;
+    r.right = 0;
+
+    int fill = fillrect(hdc, &r);
+
+    if(fill == -1) {
+        printf(2, "fillrecttest failed due to invalid HDC\n");
+        exit();
+    }
+
+    fill = fillrect(-1, &r);
+
+    if(fill > -1) {
+        printf(2, "fillrecttest failed due to HDC being valid when it should be invalid\n");
+        exit();
+    }
+
+    printf(1, "fillrecttest passed \n");
+
+}
+
+void endpainttest() {
+    int hdc = beginpaint(0);
+
+    if(hdc == -1) {
+        printf(2, "endpainttest failed due to invalid HDC\n");
+        exit();
+    }
+
+    struct rect r;
+    r.top = 0;
+    r.left = 0;
+    r.bottom = 0;
+    r.right = 0;
+
+    setpencolour(16, 0, 0, 0);
+    selectpen(hdc, 16);
+    setpixel(hdc, 0, 0);
+    moveto(hdc, 0, 0);
+    lineto(hdc, 0, 0);
+    fillrect(hdc, &r);
+
+    int end = endpaint(hdc);
+
+    if(end == -1) {
+        printf(2, "endpainttest failed due to invalid command\n");
+        exit();
+    }
+
+    end = endpaint(-1);
+
+    if(end > -1) {
+        printf(2, "endpainttest failed due to HDC being valid when it should be invalid\n");
+        exit();
+    }
+
+    printf(1, "endpainttest passed \n");
+}
+
 unsigned long randstate = 1;
 unsigned int rand()              {
     randstate = randstate * 1664525 + 1013904223;
@@ -1730,6 +1984,18 @@ int main(int argc, char *argv[])     {
         exit();
     }
     close(open("usertests.ran", O_CREATE));
+
+    int hdc = beginpaint(0);
+
+    beginpainttest(hdc);
+    setpixeltest(hdc);
+    movetotest(hdc);
+    linetest(hdc);
+    setpencolourtest();
+    selectpentest(hdc);
+    fillrecttest(hdc);
+    endpainttest();
+    endpaint(hdc);
 
     argptest();
     createdelete();
