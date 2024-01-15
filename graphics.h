@@ -80,7 +80,3 @@ struct device_context {
 struct device_context contexts[MAX_CONTEXTS];
 
 struct graphics_command global_commands[MAX_GRAPHICS_COMMANDS];
-
-
-
-

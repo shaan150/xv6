@@ -2,7 +2,8 @@
 #include "user.h"
 
 
-void drawLines(int hdc, int color, int offset) {
+void drawLines(int color, int offset) {
+    int hdc = beginpaint(0);
     setpencolour(color, (color == 16) ? 0 : 0, (color == 16) ? 0 : 63, (color == 16) ? 63 : 0);
     for (int i = 20; i < 160; i += 20) {
         selectpen(hdc, color);
@@ -12,12 +13,11 @@ void drawLines(int hdc, int color, int offset) {
         lineto(hdc, i + 20, i + offset);
         lineto(hdc, i, i + offset);
     }
+    endpaint(hdc);
 }
 
 int main(int argc, char* argv[]) {
     setvideomode(0x13);
-
-    int hdc = beginpaint(0);
 
     int pid = fork(); // Create a new process
 
@@ -28,17 +28,16 @@ int main(int argc, char* argv[]) {
     }
 
     if (pid == 0) {
+
         // Child process
-        drawLines(hdc, 17, 0);
+        drawLines(17, 0);
     } else {
         // Parent process
-        drawLines(hdc, 16, 20);
+        drawLines( 16, 20);
 
         // Wait for child process to finish
         wait();
     }
-
-    endpaint(hdc);
 
     getch();
     setvideomode(0x03);
